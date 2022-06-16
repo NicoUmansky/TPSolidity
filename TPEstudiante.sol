@@ -1,4 +1,5 @@
 
+
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.10;
 
@@ -8,7 +9,8 @@ contract Estudiantes{
     string private _curso;
     address private docente;
     mapping(string => uint) private notas_materias;
-    string[] private materiasarr;
+    string[] private materias;
+    
 
     constructor (string memory nombre_, string memory apellido_, string memory curso_){
         _nombre = nombre_;
@@ -30,16 +32,17 @@ contract Estudiantes{
         return _curso;
     }
 
-    function set_notas_materias (string memory materias , uint notas) public{
+    function set_notas_materias (string memory materia , uint notas) public{
         require (msg.sender == docente, "solo el docente puede modificar notas");
-        notas_materias [materias] = notas;
+        notas_materias [materia] = notas;
+        materias.push(materia);
     }
-    function nota_materia(string memory materias) public view returns (uint){
-        return notas_materias [materias];
+    function nota_materia(string memory materia) public view returns (uint){
+        return notas_materias [materia];
     }
 
-    function aprobo(string memory materias) public view returns (bool){
-        if (notas_materias[materias] >= 60){
+    function aprobo(string memory materia) public view returns (bool){
+        if (notas_materias[materia] >= 60){
             return true;
         }
         else {
@@ -48,13 +51,13 @@ contract Estudiantes{
     }
 
     function promedio() public view returns (uint){
-        uint notas;
-        uint long = materiasarr.length;
-        for (uint i; i<=long; i++){
-            notas += notas_materias[materiasarr[i]];
+        uint promdediofinal;
+
+        for (uint i = 0; i<materias.length; i++){
+            promdediofinal += notas_materias[materias[i]];
           
         }
-        return notas/long;
+        return promdediofinal /(materias.length);
     }
 
 
